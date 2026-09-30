@@ -53,7 +53,7 @@ function agrupar(itens: ItemMural[]): Grupo[] {
 /** Para onde o item vai depois de mudar de status — espelha `vw_mural`. */
 function destino(item: ItemMural, status: StatusLancamento, obs?: string | null): ItemMural | null {
   const observacao = obs === undefined ? item.observacao : obs;
-  if (status === "lancado") return null;
+  if (status === "lancado" || status === "sem_fatura") return null;
   if (status === "aberto") return item.dias <= 10 ? { ...item, status, observacao, mural: "medir" } : null;
   return { ...item, status, observacao, mural: status === "medido" ? "titulo" : "pendente" };
 }
@@ -192,6 +192,7 @@ function Cartao({ grupo, onStatus, onSituacao }: { grupo: Grupo } & Acoes) {
               <>
                 <Botao cor="laranja" onClick={() => onStatus(ids, "medido")}>Medido</Botao>
                 <Botao cor="verde" onClick={() => onStatus(ids, "lancado")} title="Medição e título já feitos">Lançado</Botao>
+                <Botao onClick={() => onStatus(ids, "sem_fatura")} title="Mês sem fatura">Não teve</Botao>
               </>
             )}
             {grupo.mural === "titulo" && (
@@ -205,6 +206,7 @@ function Cartao({ grupo, onStatus, onSituacao }: { grupo: Grupo } & Acoes) {
                 <Botao onClick={() => onStatus(ids, "aberto")}>A medir</Botao>
                 <Botao cor="laranja" onClick={() => onStatus(ids, "medido")}>Medido</Botao>
                 <Botao cor="verde" onClick={() => onStatus(ids, "lancado")}>Lançado</Botao>
+                <Botao onClick={() => onStatus(ids, "sem_fatura")} title="Mês sem fatura">Não teve</Botao>
               </>
             )}
             <Mais

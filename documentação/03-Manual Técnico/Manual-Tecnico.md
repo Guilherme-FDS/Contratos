@@ -94,6 +94,7 @@ Contratos/
 | `0002_periodicos.sql` | Remove os periódicos importados (pelos IDs do import); só periódico/Waldemar renovam |
 | `0003_importados_periodicos.sql` | Contratos importados da planilha viram Periódico (renovam sozinhos) |
 | `0004_obs_no_mural.sql` | `vw_mural` passa a trazer a observação do contrato (`obs_contrato`) para o cartão |
+| `0005_sem_fatura.sql` | Etapa `sem_fatura` ("Não teve"): mês sem fatura, conta como resolvido e gera o próximo |
 
 Scripts de dados (com dado real, **fora do git** em `codigo/scripts/saida/`):
 `seed.sql` (import inicial) e `0005_acessos_e_regularizacao.sql` (sites/logins

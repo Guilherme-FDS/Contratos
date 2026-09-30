@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { clienteServidor } from "@/lib/supabase-servidor";
 import type { Situacao, StatusLancamento, TipoContrato } from "@/lib/tipos";
 
-const STATUS: StatusLancamento[] = ["aberto", "medido", "lancado", "pendente"];
+const STATUS: StatusLancamento[] = ["aberto", "medido", "lancado", "pendente", "sem_fatura"];
 const SITUACOES: Situacao[] = ["ativo", "concluido", "rescindido", "inativo"];
 const TIPOS: TipoContrato[] = ["normal", "periodico", "waldemar"];
 const DATA = /^\d{4}-\d{2}-\d{2}$/;

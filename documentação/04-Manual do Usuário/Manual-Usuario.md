@@ -12,6 +12,7 @@ tags: [manual, usuario]
 | 🟧 Laranja | Medição feita |
 | 🟩 Verde | Título lançado — concluído |
 | 🟨 Amarelo | Pendência |
+| Cinza riscado | Não teve — mês sem fatura (ex.: Correios). Sai do painel como resolvido |
 
 ## Painel
 

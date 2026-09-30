@@ -84,7 +84,7 @@ export default async function Waldemar({ searchParams }: { searchParams: { todas
                   {meses.map((m) => {
                     const doMes = porMes.get(m.chave) ?? [];
                     // Pior etapa do mês decide a cor: pendência > aberto > medido > lançado.
-                    const s = (["pendente", "aberto", "medido", "lancado"] as const).find((x) => doMes.some((l) => l.status === x));
+                    const s = (["pendente", "aberto", "medido", "lancado", "sem_fatura"] as const).find((x) => doMes.some((l) => l.status === x));
                     return (
                       <span
                         key={m.chave}

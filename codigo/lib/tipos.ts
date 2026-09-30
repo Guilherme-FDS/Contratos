@@ -1,4 +1,4 @@
-export type StatusLancamento = "aberto" | "medido" | "lancado" | "pendente";
+export type StatusLancamento = "aberto" | "medido" | "lancado" | "pendente" | "sem_fatura";
 export type Situacao = "ativo" | "concluido" | "rescindido" | "inativo";
 export type TipoContrato = "normal" | "periodico" | "waldemar";
 
@@ -44,6 +44,7 @@ export const STATUS_ROTULO: Record<StatusLancamento, string> = {
   medido: "Medição feita",
   lancado: "Título lançado",
   pendente: "Pendência",
+  sem_fatura: "Não teve",
 };
 
 /** Cor sólida da célula na grade de meses (mesmas cores da planilha). */
@@ -52,6 +53,7 @@ export const STATUS_CELULA: Record<StatusLancamento, string> = {
   medido: "bg-orange-400 text-white ring-orange-500",
   lancado: "bg-green-600 text-white ring-green-700",
   pendente: "bg-yellow-300 text-yellow-950 ring-yellow-500",
+  sem_fatura: "bg-wegg-100 text-wegg-400 ring-wegg-200 line-through",
 };
 
 /** Laranja = medido, verde = lançado, amarelo = pendência. */
@@ -60,6 +62,7 @@ export const STATUS_COR: Record<StatusLancamento, string> = {
   medido: "bg-orange-100 text-orange-800 ring-orange-400",
   lancado: "bg-green-100 text-green-800 ring-green-500",
   pendente: "bg-yellow-100 text-yellow-900 ring-yellow-400",
+  sem_fatura: "bg-wegg-50 text-wegg-400 ring-wegg-100",
 };
 
 export const SITUACAO_ROTULO: Record<Situacao, string> = {

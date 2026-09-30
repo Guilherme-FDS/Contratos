@@ -137,12 +137,12 @@ export default function GradeMeses({
         {anos.map(([ano, meses]) => {
           const total = meses.flat();
           const aberto = anosAbertos ? anosAbertos.includes(ano) : ano >= anoAtual;
-          const lancados = total.filter((l) => l.status === "lancado").length;
+          const lancados = total.filter((l) => l.status === "lancado" || l.status === "sem_fatura").length;
           return (
             <details key={ano} open={aberto} className="group rounded-lg border border-wegg-100 bg-white">
               <summary className="flex cursor-pointer select-none items-center gap-3 px-3 py-2 text-sm">
                 <span className="font-semibold">{ano}</span>
-                <span className="text-xs text-wegg-500">{lancados}/{total.length} lançados</span>
+                <span className="text-xs text-wegg-500">{lancados}/{total.length} resolvidos</span>
                 <button
                   type="button"
                   onClick={(e) => { e.preventDefault(); selecionarAno(meses); }}
@@ -192,6 +192,7 @@ export default function GradeMeses({
             <Botao cor="laranja" disabled={ocupado} onClick={() => aplicar("medido")}>Medido</Botao>
             <Botao cor="verde" disabled={ocupado} onClick={() => aplicar("lancado")}>Título lançado</Botao>
             <Botao cor="amarelo" disabled={ocupado} onClick={() => aplicar("pendente")}>Pendência</Botao>
+            <Botao disabled={ocupado} onClick={() => aplicar("sem_fatura")}>Não teve</Botao>
             <Botao disabled={ocupado} onClick={() => aplicar("aberto")}>A medir</Botao>
             <Botao disabled={ocupado} onClick={excluir}>Excluir</Botao>
             <button type="button" onClick={() => setSel(new Set())} className="px-2 text-xs text-off/70 hover:text-off">limpar</button>
