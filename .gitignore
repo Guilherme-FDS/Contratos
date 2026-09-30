@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env*.local
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+# Dado real nunca vai para o git (repositório público)
+*.xlsx
+*.xls
+*.csv
+codigo/supabase/seed.sql
+codigo/scripts/saida/
