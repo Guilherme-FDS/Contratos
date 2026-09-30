@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Obs from "@/components/Obs";
 import GradeMeses, { Legenda } from "@/components/GradeMeses";
 import { SeloStatus } from "@/components/ui";
 import { formatarData } from "@/lib/datas";
@@ -95,7 +96,7 @@ export default async function Waldemar({ searchParams }: { searchParams: { todas
                 </span>
               </summary>
               <div className="space-y-2 border-t border-wegg-50 bg-off-50/60 px-4 py-3">
-                {c.observacao && <p className="text-xs text-wegg-700">📝 {c.observacao}</p>}
+                {c.observacao && <Obs texto={c.observacao} />}
                 <GradeMeses contratoId={c.id} lancamentos={ls} periodicidade={c.periodicidade_meses} semLegenda />
                 <Link href={`/contratos/${c.id}`} className="text-xs text-wegg-500 hover:underline">Editar conta →</Link>
               </div>

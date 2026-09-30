@@ -80,7 +80,15 @@ export default function FormularioContrato({
       )}
       <label className="text-sm font-medium sm:col-span-2">
         Observação
-        <textarea name="observacao" rows={2} defaultValue={contrato?.observacao ?? ""} className={campo} />
+        <textarea
+          name="observacao"
+          rows={4}
+          defaultValue={contrato?.observacao ?? ""}
+          placeholder={"Site, login, senha, avisos… (uma informação por linha)"}
+          spellCheck={false}
+          className={campo}
+        />
+        <span className="text-xs font-normal text-wegg-500">Aparece no cartão do painel. Links viram clicáveis.</span>
       </label>
       <div className="flex items-center gap-3 sm:col-span-2">
         <Enviar rotulo={novo ? "Criar contrato" : "Salvar"} />
@@ -93,7 +101,7 @@ export default function FormularioContrato({
 function Enviar({ rotulo }: { rotulo: string }) {
   const { pending } = useFormStatus();
   return (
-    <button disabled={pending} className="rounded-lg bg-wegg-900 px-4 py-1.5 text-sm font-medium text-white disabled:opacity-60">
+    <button disabled={pending} className="rounded-lg bg-wegg-900 px-4 py-1.5 text-sm font-medium text-off disabled:opacity-60">
       {pending ? "Salvando…" : rotulo}
     </button>
   );

@@ -93,6 +93,11 @@ Contratos/
 | `0001_schema.sql` | Tabelas, gatilhos, views, RLS |
 | `0002_periodicos.sql` | Remove os periódicos importados (pelos IDs do import); só periódico/Waldemar renovam |
 | `0003_importados_periodicos.sql` | Contratos importados da planilha viram Periódico (renovam sozinhos) |
+| `0004_obs_no_mural.sql` | `vw_mural` passa a trazer a observação do contrato (`obs_contrato`) para o cartão |
+
+Scripts de dados (com dado real, **fora do git** em `codigo/scripts/saida/`):
+`seed.sql` (import inicial) e `0005_acessos_e_regularizacao.sql` (sites/logins
+dos portais na observação + CT/3568, CT/3571, CT/817).
 
 ## Implantação (primeira vez)
 

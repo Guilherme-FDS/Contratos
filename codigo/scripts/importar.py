@@ -30,8 +30,8 @@ ABAS = [
     ("Contratos - nova planilha 2023 ", "periodico"),  # renovam sozinhos (0003)
     ("Despesas Waldemar", "waldemar"),
 ]
-# Texto com cara de senha/CPF/número de conta nunca vai para o banco.
-SENSIVEL = re.compile(r"[@#]|\d{3}\.\d{3}\.\d{3}|^\d{8,}$")
+# Links, logins e senhas de portal vão para a observação (decisão de
+# 30/09/2026: uso individual, precisa ver rápido no painel).
 NS = uuid.UUID("00000000-0000-0000-0000-00000000c0c0")
 
 
@@ -103,9 +103,7 @@ def main():
     cs, ls, revisar = [], [], []
     vistos = {}
     for o in contratos:
-        obs = " | ".join(
-            n for n in o["notas"] if not n.startswith("http") and not SENSIVEL.search(n)
-        )[:500] or None
+        obs = "\n".join(o["notas"])[:1000] or None
         situacao = "inativo" if o["oculto"] else "ativo"
         cs.append(f"({q(o['id'])},{q(o['codigo'])},{q(o['fornecedor'])},"
                   f"{q(o['tipo'])},{q(situacao)},{q(obs)})")

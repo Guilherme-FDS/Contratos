@@ -148,3 +148,4 @@ export async function editarContrato(id: string, _: Resultado, form: FormData): 
   revalidarTudo();
   return {};
 }
+

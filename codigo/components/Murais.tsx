@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { mudarSituacao, mudarStatusVarios } from "@/app/actions";
 import { formatarData, normalizar, textoPrazo } from "@/lib/datas";
 import type { ItemMural, Situacao, StatusLancamento } from "@/lib/tipos";
+import Obs from "./Obs";
 import { Botao, SeletorSituacao, SeloTipo } from "./ui";
 
 type Chave = ItemMural["mural"];
@@ -24,6 +25,7 @@ interface Grupo {
   codigo: string | null;
   fornecedor: string;
   tipo: ItemMural["tipo"];
+  obs: string | null;
   itens: ItemMural[];
 }
 
@@ -32,7 +34,16 @@ function agrupar(itens: ItemMural[]): Grupo[] {
   for (const i of itens) {
     const chave = `${i.mural}|${i.contrato_id}`;
     if (!m.has(chave)) {
-      m.set(chave, { chave, mural: i.mural, contrato_id: i.contrato_id, codigo: i.codigo, fornecedor: i.fornecedor, tipo: i.tipo, itens: [] });
+      m.set(chave, {
+        chave,
+        mural: i.mural,
+        contrato_id: i.contrato_id,
+        codigo: i.codigo,
+        fornecedor: i.fornecedor,
+        tipo: i.tipo,
+        obs: i.obs_contrato,
+        itens: [],
+      });
     }
     m.get(chave)!.itens.push(i);
   }
@@ -206,7 +217,8 @@ function Cartao({ grupo, onStatus, onSituacao }: { grupo: Grupo } & Acoes) {
         )}
       </div>
 
-      {notas.length > 0 && motivo === null && <p className="mt-1 text-xs text-wegg-700">📝 {notas.join(" · ")}</p>}
+      {grupo.obs && <Obs texto={grupo.obs} className="mt-1" />}
+      {notas.length > 0 && motivo === null && <p className="mt-1 text-xs text-yellow-900">⚠️ {notas.join(" · ")}</p>}
 
       {motivo !== null && (
         <div className="mt-2 space-y-2">

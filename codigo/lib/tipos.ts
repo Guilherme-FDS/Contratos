@@ -35,6 +35,8 @@ export interface ItemMural extends Lancamento {
   tipo: TipoContrato;
   dias: number;
   mural: "medir" | "titulo" | "pendente";
+  /** Observação do contrato (links, logins do portal etc.). */
+  obs_contrato: string | null;
 }
 
 export const STATUS_ROTULO: Record<StatusLancamento, string> = {

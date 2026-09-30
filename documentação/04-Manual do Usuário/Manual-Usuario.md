@@ -31,6 +31,11 @@ Menu **⋯** de cada cartão: marcar pendência (com motivo), *Lançar vários
 meses* (abre a grade do contrato) e mudar a situação (Concluído,
 Rescindido, Inativo → sai dos murais).
 
+Abaixo do nome aparece a **observação do contrato** (site do portal,
+login, senha, avisos); links abrem direto. Edite em Contratos → contrato →
+Observação, uma informação por linha. Em amarelo (⚠️) ficam as notas de
+pendência do vencimento.
+
 A caixa de filtro filtra os três murais por nº, nome ou data (`25/10`).
 
 ## Lançar vários meses (aluguel do ano, etc.)
