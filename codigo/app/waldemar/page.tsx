@@ -24,9 +24,19 @@ function janela(hoje = new Date()) {
  * faixa dos últimos/próximos meses. Clicar abre a grade completa da conta.
  * Os vencimentos também aparecem no Painel.
  */
-export default async function Waldemar({ searchParams }: { searchParams: { todas?: string } }) {
+export default async function Waldemar({ searchParams }: { searchParams: { todas?: string; ordem?: string } }) {
+  const crescente = searchParams.ordem !== "desc";
+  const link = (p: { todas?: boolean; desc?: boolean }) => {
+    const q = new URLSearchParams();
+    if (p.todas) q.set("todas", "1");
+    if (p.desc) q.set("ordem", "desc");
+    const s = q.toString();
+    return s ? `/waldemar?${s}` : "/waldemar";
+  };
+  const inverter = link({ todas: !!searchParams.todas, desc: crescente });
   const supabase = clienteServidor();
-  let consulta = supabase.from("vw_contratos").select("*").eq("tipo", "waldemar").order("proximo_vencimento", { nullsFirst: false });
+  let consulta = supabase.from("vw_contratos").select("*").eq("tipo", "waldemar").order("proximo_vencimento", { ascending: crescente, nullsFirst: false })
+    .order("fornecedor");
   if (!searchParams.todas) consulta = consulta.eq("situacao", "ativo");
   const { data: contas } = await consulta;
   const ids = (contas ?? []).map((c) => c.id);
@@ -44,7 +54,10 @@ export default async function Waldemar({ searchParams }: { searchParams: { todas
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="mr-auto text-xl font-semibold tracking-tight">Contas do Waldemar</h1>
-        <Link href={searchParams.todas ? "/waldemar" : "/waldemar?todas=1"} className="text-sm text-wegg-500 hover:underline">
+        <Link href={inverter} scroll={false} className="text-sm text-wegg-500 hover:underline md:hidden">
+          Vencimento {crescente ? "↑" : "↓"}
+        </Link>
+        <Link href={link({ todas: !searchParams.todas, desc: !crescente })} className="text-sm text-wegg-500 hover:underline">
           {searchParams.todas ? "Só ativas" : "Mostrar encerradas"}
         </Link>
         <Link href="/contratos/novo?tipo=waldemar" className="rounded-lg bg-wegg-900 px-3 py-1.5 text-sm font-medium text-off">
@@ -56,7 +69,9 @@ export default async function Waldemar({ searchParams }: { searchParams: { todas
       <div className="overflow-hidden rounded-xl border border-wegg-100 bg-white shadow-sm">
         <div className="hidden grid-cols-[minmax(0,1.4fr)_7rem_8rem_minmax(0,2fr)] gap-3 border-b border-wegg-100 bg-wegg-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-wegg-500 md:grid">
           <span>Conta</span>
-          <span>Próximo</span>
+          <Link href={inverter} scroll={false} className="hover:text-wegg-900" title="Inverter a ordem">
+            Próximo {crescente ? "↑" : "↓"}
+          </Link>
           <span>Etapa</span>
           <span className="grid grid-cols-12 gap-1 text-center">
             {meses.map((m) => (

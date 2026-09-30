@@ -62,10 +62,16 @@ recolhidos.
 
 - Filtros: nome ou nº (`correio`, `CT/982`), data do próximo vencimento
   (`25/10`), situação (padrão: Ativo) e tipo.
+- Ordem: pelo **próximo vencimento**, do que vence primeiro ao último.
+  Clique no título da coluna *Próx. vencimento* para inverter (↑/↓).
+  Sem vencimento fica sempre no fim.
 - Situação muda direto na tabela.
 - **+ Novo contrato** escolhe o tipo acima.
 
 ## Waldemar
+
+Mesma ordem por vencimento; clique em *Próximo* (ou *Vencimento* no
+celular) para inverter.
 
 Lista com uma linha por conta: próximo vencimento, etapa e uma faixa com
 5 meses para trás + atual + 6 para frente, colorida pela etapa. Clique na

@@ -17,6 +17,8 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
   const [situacao, setSituacao] = useState<Situacao | "">("ativo");
   const [tipo, setTipo] = useState<TipoContrato | "">("");
   const [erro, setErro] = useState<string | null>(null);
+  /** Ordem do próximo vencimento; sem data vai sempre para o fim. */
+  const [crescente, setCrescente] = useState(true);
   const [, iniciar] = useTransition();
 
   useEffect(() => setContratos(iniciais), [iniciais]);
@@ -24,14 +26,16 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
   const filtrados = useMemo(() => {
     const n = normalizar(nome);
     const d = data.trim();
-    return contratos.filter(
-      (c) =>
-        (!situacao || c.situacao === situacao) &&
-        (!tipo || c.tipo === tipo) &&
-        (!n || normalizar(`${c.codigo ?? ""} ${c.fornecedor}`).includes(n)) &&
-        (!d || formatarData(c.proximo_vencimento).includes(d)),
-    );
-  }, [contratos, nome, data, situacao, tipo]);
+    return contratos
+      .filter(
+        (c) =>
+          (!situacao || c.situacao === situacao) &&
+          (!tipo || c.tipo === tipo) &&
+          (!n || normalizar(`${c.codigo ?? ""} ${c.fornecedor}`).includes(n)) &&
+          (!d || formatarData(c.proximo_vencimento).includes(d)),
+      )
+      .sort((a, b) => compararVencimento(a, b, crescente));
+  }, [contratos, nome, data, situacao, tipo, crescente]);
 
   function alterar(c: ContratoResumo, s: Situacao) {
     const anterior = contratos;
@@ -83,7 +87,16 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
             <tr>
               <th className="px-3 py-2">Nº</th>
               <th className="px-3 py-2">Fornecedor</th>
-              <th className="px-3 py-2">Próx. vencimento</th>
+              <th className="px-3 py-2">
+                <button
+                  type="button"
+                  onClick={() => setCrescente(!crescente)}
+                  className="inline-flex items-center gap-1 uppercase hover:text-wegg-900"
+                  title="Inverter a ordem"
+                >
+                  Próx. vencimento {crescente ? "↑" : "↓"}
+                </button>
+              </th>
               <th className="px-3 py-2">Etapa</th>
               <th className="px-3 py-2">Último lançado</th>
               <th className="px-3 py-2">Situação</th>
@@ -113,4 +126,13 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
       </div>
     </div>
   );
+}
+
+/** Por próximo vencimento (depois fornecedor); sem vencimento sempre no fim. */
+function compararVencimento(a: ContratoResumo, b: ContratoResumo, crescente: boolean) {
+  const va = a.proximo_vencimento;
+  const vb = b.proximo_vencimento;
+  if (!va || !vb) return va ? -1 : vb ? 1 : a.fornecedor.localeCompare(b.fornecedor);
+  const r = va.localeCompare(vb) || a.fornecedor.localeCompare(b.fornecedor);
+  return crescente ? r : -r;
 }
