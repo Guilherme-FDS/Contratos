@@ -52,3 +52,5 @@ Registrar aqui cada resposta, pelo nº do contrato (sem valores):
 | 2026-09-30 | CT/3568 Pontonet 206 Airbnb | Carnê anual lançado até 11/09/2026. Criadas 12 parcelas a partir de 11/10/2026; a 1ª com nota: aditivar +12, medir o ano e lançar título com 12 parcelas. |
 | 2026-09-30 | CT/3571 Aluguel Plan. Rural | Última parcela 15/09/2026, lançado por ano (corrige índice). Criadas 12 parcelas a partir de 15/10/2026 com a mesma nota. Segue periódico. |
 | 2026-09-30 | CT/817 Copel Plenittá Parque do Ingá | **Concluído**: obra entregue ao condomínio. Nada em aberto. |
+| 2026-09-30 | CT/546 Dona Angela, CT/3100, CT/3568 (29/10/2025), Waldemar Portal Segovia | Vencimentos antigos sem cor: **considerados pagos** (já importados como lançados). Antigos não importam. |
+| 2026-09-30 | — | **Revisão da planilha concluída.** Daqui em diante os ajustes são feitos direto na plataforma (etapas "Não teve", "Lançado" etc.). |
