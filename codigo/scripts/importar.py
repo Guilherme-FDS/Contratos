@@ -27,7 +27,7 @@ import uuid
 import openpyxl
 
 ABAS = [
-    ("Contratos - nova planilha 2023 ", "normal"),
+    ("Contratos - nova planilha 2023 ", "periodico"),  # renovam sozinhos (0003)
     ("Despesas Waldemar", "waldemar"),
 ]
 # Texto com cara de senha/CPF/número de conta nunca vai para o banco.
@@ -85,7 +85,7 @@ def ler(caminho):
                 elif isinstance(v, str) and v.strip():
                     notas.append(v.strip())
             yield dict(
-                id=str(uuid.uuid5(NS, f"{tipo}|{r}")),
+                id=str(uuid.uuid5(NS, f"{'normal' if tipo == 'periodico' else tipo}|{r}")),
                 aba=aba.strip(), linha=r, tipo=tipo, codigo=codigo,
                 fornecedor=fornecedor, oculto=bool(ws.row_dimensions[r].hidden),
                 venc=venc, notas=notas,

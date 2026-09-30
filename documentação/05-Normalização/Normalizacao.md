@@ -10,7 +10,7 @@ Como a planilha virou banco, e o registro das decisões tomadas item a item.
 
 | Na planilha | Na plataforma |
 |---|---|
-| Aba "Contratos - nova planilha 2023" | contratos `normal` |
+| Aba "Contratos - nova planilha 2023" | contratos `periodico` (renovam sozinhos) |
 | Aba "Contratos Periódicos" | **não importada** (removida em 30/09/2026) |
 | Aba "Despesas Waldemar" | contratos `waldemar` (sem nº de CT) |
 | Abas ocultas 2020, 2021, "Contratos" | **não importadas** (histórico) |
@@ -45,3 +45,4 @@ Registrar aqui cada resposta, pelo nº do contrato (sem valores):
 |---|---|---|
 | 2026-09-30 | Todos da aba "Contratos Periódicos" (ativos) | A data é o **dia do vencimento mensal**. Import gera 12 vencimentos mensais a partir de hoje (1º em 01/10/2026); datas antigas ficam como lançadas. |
 | 2026-09-30 | Todos da aba "Contratos Periódicos" | **Removidos** da plataforma (migration 0002). A decisão anterior (vencimento mensal) foi revogada. |
+| 2026-09-30 | Todos os contratos importados da aba 2023 | Passam a **Periódico** (renovam sozinhos, migration 0003). Os pontuais o usuário troca para "Contrato" na mão. |

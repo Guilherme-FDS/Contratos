@@ -91,7 +91,8 @@ Contratos/
 | Arquivo | O que faz |
 |---|---|
 | `0001_schema.sql` | Tabelas, gatilhos, views, RLS |
-| `0002_periodicos.sql` | Remove periódicos importados; só periódico/Waldemar renovam |
+| `0002_periodicos.sql` | Remove os periódicos importados (pelos IDs do import); só periódico/Waldemar renovam |
+| `0003_importados_periodicos.sql` | Contratos importados da planilha viram Periódico (renovam sozinhos) |
 
 ## Implantação (primeira vez)
 
