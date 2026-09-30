@@ -44,9 +44,17 @@ export const STATUS_ROTULO: Record<StatusLancamento, string> = {
   pendente: "Pendência",
 };
 
-/** Mesmas cores da planilha: laranja = medido, verde = lançado, amarelo = pendência. */
+/** Cor sólida da célula na grade de meses (mesmas cores da planilha). */
+export const STATUS_CELULA: Record<StatusLancamento, string> = {
+  aberto: "bg-white text-wegg-900 ring-wegg-200",
+  medido: "bg-orange-400 text-white ring-orange-500",
+  lancado: "bg-green-600 text-white ring-green-700",
+  pendente: "bg-yellow-300 text-yellow-950 ring-yellow-500",
+};
+
+/** Laranja = medido, verde = lançado, amarelo = pendência. */
 export const STATUS_COR: Record<StatusLancamento, string> = {
-  aberto: "bg-slate-100 text-slate-700 ring-slate-300",
+  aberto: "bg-wegg-50 text-wegg-700 ring-wegg-200",
   medido: "bg-orange-100 text-orange-800 ring-orange-400",
   lancado: "bg-green-100 text-green-800 ring-green-500",
   pendente: "bg-yellow-100 text-yellow-900 ring-yellow-400",
@@ -63,4 +71,10 @@ export const TIPO_ROTULO: Record<TipoContrato, string> = {
   normal: "Contrato",
   periodico: "Periódico",
   waldemar: "Waldemar",
+};
+
+export const TIPO_AJUDA: Record<TipoContrato, string> = {
+  normal: "Prazo definido: informe quantos meses. Termina no último.",
+  periodico: "Renova sozinho todo mês até você concluir ou inativar.",
+  waldemar: "Conta do Sr. Waldemar. Renova sozinha como o periódico.",
 };

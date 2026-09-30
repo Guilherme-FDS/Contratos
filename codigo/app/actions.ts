@@ -35,6 +35,24 @@ export async function mudarStatus(
   return {};
 }
 
+/** Mesma coisa para vários vencimentos de uma vez (ex.: aluguel do ano todo). */
+export async function mudarStatusVarios(
+  ids: string[],
+  status: StatusLancamento,
+  observacao?: string | null,
+): Promise<Resultado> {
+  if (!STATUS.includes(status)) return { erro: "Status inválido." };
+  if (ids.length === 0) return {};
+  if (ids.length > 500) return { erro: "Selecione no máximo 500 vencimentos." };
+  const dados: Record<string, unknown> = { status };
+  if (observacao !== undefined) dados.observacao = observacao?.trim() || null;
+
+  const { error } = await clienteServidor().from("lancamentos").update(dados).in("id", ids);
+  if (error) return { erro: error.message };
+  revalidarTudo();
+  return {};
+}
+
 export async function mudarSituacao(contratoId: string, situacao: Situacao): Promise<Resultado> {
   if (!SITUACOES.includes(situacao)) return { erro: "Situação inválida." };
   const { error } = await clienteServidor().from("contratos").update({ situacao }).eq("id", contratoId);
@@ -78,8 +96,9 @@ export async function gerarVencimentos(
   return {};
 }
 
-export async function excluirLancamento(id: string): Promise<Resultado> {
-  const { error } = await clienteServidor().from("lancamentos").delete().eq("id", id);
+export async function excluirLancamentos(ids: string[]): Promise<Resultado> {
+  if (ids.length === 0) return {};
+  const { error } = await clienteServidor().from("lancamentos").delete().in("id", ids);
   if (error) return { erro: error.message };
   revalidarTudo();
   return {};
@@ -101,12 +120,18 @@ function lerContrato(form: FormData) {
 export async function criarContrato(_: Resultado, form: FormData): Promise<Resultado> {
   const dados = lerContrato(form);
   if (!dados.fornecedor) return { erro: "Informe o fornecedor." };
-  const supabase = clienteServidor();
-  const { data, error } = await supabase.from("contratos").insert(dados).select("id").single();
-  if (error) return { erro: error.message };
 
   const primeiro = String(form.get("primeiro_vencimento") ?? "");
-  const qtd = Number(form.get("quantidade") ?? 12);
+  // Contrato: a quantidade informada é o prazo. Periódico/Waldemar: já deixa
+  // 12 meses à vista; o gatilho continua criando os seguintes.
+  const qtd = dados.tipo === "normal" ? Number(form.get("quantidade") ?? 0) : 12;
+  if (dados.tipo === "normal" && (!DATA.test(primeiro) || !(qtd >= 1))) {
+    return { erro: "Informe o 1º vencimento e a quantidade de meses do contrato." };
+  }
+
+  const { data, error } = await clienteServidor().from("contratos").insert(dados).select("id").single();
+  if (error) return { erro: error.message };
+
   if (DATA.test(primeiro)) {
     const r = await gerarVencimentos(data.id, primeiro, qtd, dados.periodicidade_meses);
     if (r.erro) return r;

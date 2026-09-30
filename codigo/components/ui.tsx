@@ -10,17 +10,16 @@ export function SeloStatus({ status }: { status: StatusLancamento }) {
 }
 
 export function SeloTipo({ tipo }: { tipo: TipoContrato }) {
-  if (tipo === "normal") return null;
-  const cor = tipo === "waldemar" ? "bg-purple-100 text-purple-800" : "bg-sky-100 text-sky-800";
-  return <span className={`rounded px-1.5 py-0.5 text-[11px] font-semibold uppercase ${cor}`}>{TIPO_ROTULO[tipo]}</span>;
+  if (tipo !== "waldemar") return null;
+  return <span className="rounded bg-purple-100 px-1.5 py-0.5 text-[11px] font-semibold uppercase text-purple-800">{TIPO_ROTULO[tipo]}</span>;
 }
 
 export function SeloSituacao({ situacao }: { situacao: Situacao }) {
   const cor: Record<Situacao, string> = {
     ativo: "text-green-700",
-    concluido: "text-slate-500",
+    concluido: "text-wegg-500",
     rescindido: "text-rose-700",
-    inativo: "text-slate-400",
+    inativo: "text-wegg-300",
   };
   return <span className={`text-xs font-medium ${cor[situacao]}`}>{SITUACAO_ROTULO[situacao]}</span>;
 }
@@ -40,7 +39,7 @@ export function SeletorSituacao({
       value={valor}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value as Situacao)}
-      className="rounded-md border border-slate-300 bg-white px-1.5 py-1 text-xs"
+      className="rounded-md border border-wegg-200 bg-white px-1.5 py-1 text-xs"
     >
       {(Object.keys(SITUACAO_ROTULO) as Situacao[]).map((s) => (
         <option key={s} value={s}>
@@ -55,7 +54,8 @@ const BOTAO: Record<string, string> = {
   laranja: "bg-orange-500 text-white hover:bg-orange-600",
   verde: "bg-green-600 text-white hover:bg-green-700",
   amarelo: "bg-yellow-300 text-yellow-950 hover:bg-yellow-400",
-  neutro: "bg-white text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50",
+  neutro: "bg-white text-wegg-800 ring-1 ring-inset ring-wegg-200 hover:bg-wegg-50",
+  marca: "bg-wegg-900 text-off hover:bg-wegg-800",
 };
 
 export function Botao({

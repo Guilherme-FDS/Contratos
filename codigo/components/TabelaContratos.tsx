@@ -46,13 +46,13 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
     });
   }
 
-  const campo = "rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm";
+  const campo = "rounded-md border border-wegg-200 bg-white px-3 py-1.5 text-sm";
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-2">
         <h1 className="mr-auto text-lg font-semibold">Contratos</h1>
-        <Link href="/contratos/novo" className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white">
+        <Link href="/contratos/novo" className="rounded-md bg-wegg-900 px-3 py-1.5 text-sm font-medium text-white">
           + Novo contrato
         </Link>
       </div>
@@ -75,11 +75,11 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
       </div>
 
       {erro && <p className="rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-700">{erro}</p>}
-      <p className="text-xs text-slate-500">{filtrados.length} de {contratos.length}</p>
+      <p className="text-xs text-wegg-500">{filtrados.length} de {contratos.length}</p>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-wegg-100 bg-white">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+          <thead className="bg-wegg-50 text-left text-xs uppercase text-wegg-500">
             <tr>
               <th className="px-3 py-2">Nº</th>
               <th className="px-3 py-2">Fornecedor</th>
@@ -89,10 +89,10 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
               <th className="px-3 py-2">Situação</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-wegg-50">
             {filtrados.map((c) => (
-              <tr key={c.id} className="hover:bg-slate-50">
-                <td className="whitespace-nowrap px-3 py-2 font-mono text-xs text-slate-600">{c.codigo ?? "—"}</td>
+              <tr key={c.id} className="hover:bg-wegg-50">
+                <td className="whitespace-nowrap px-3 py-2 font-mono text-xs text-wegg-600">{c.codigo ?? "—"}</td>
                 <td className="px-3 py-2">
                   <Link href={`/contratos/${c.id}`} className="font-medium hover:underline">{c.fornecedor}</Link>{" "}
                   <SeloTipo tipo={c.tipo} />
@@ -102,7 +102,7 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
                 </td>
                 <td className="whitespace-nowrap px-3 py-2">{formatarData(c.proximo_vencimento)}</td>
                 <td className="px-3 py-2">{c.proximo_status ? <SeloStatus status={c.proximo_status} /> : "—"}</td>
-                <td className="whitespace-nowrap px-3 py-2 text-slate-500">{formatarData(c.ultimo_lancado)}</td>
+                <td className="whitespace-nowrap px-3 py-2 text-wegg-500">{formatarData(c.ultimo_lancado)}</td>
                 <td className="px-3 py-2">
                   <SeletorSituacao valor={c.situacao} onChange={(s) => alterar(c, s)} />
                 </td>

@@ -1,46 +1,36 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { clienteNavegador } from "@/lib/supabase-navegador";
+import { useFormState, useFormStatus } from "react-dom";
+import { entrar } from "@/app/auth/acoes";
+
+const campo =
+  "mt-1 block w-full rounded-lg border border-wegg-200 bg-white px-3 py-2 text-sm focus:border-wegg-900 focus:outline-none focus:ring-1 focus:ring-wegg-900";
 
 export default function FormularioLogin({ destino }: { destino: string }) {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState<string | null>(null);
-  const [enviando, setEnviando] = useState(false);
-
-  async function entrar(e: React.FormEvent) {
-    e.preventDefault();
-    setErro(null);
-    setEnviando(true);
-    const { error } = await clienteNavegador().auth.signInWithPassword({ email, password: senha });
-    if (error) {
-      setErro(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message);
-      setEnviando(false);
-      return;
-    }
-    router.replace(destino);
-    router.refresh();
-  }
-
-  const campo = "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-900 focus:outline-none";
+  const [estado, enviar] = useFormState(entrar, {});
 
   return (
-    <form onSubmit={entrar} className="space-y-4">
-      <label className="block text-sm font-medium">
+    <form action={enviar} className="space-y-4" autoComplete="on">
+      <input type="hidden" name="destino" value={destino} />
+      <label className="block text-sm font-medium text-wegg-900">
         E-mail
-        <input type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={campo} />
+        <input name="email" type="email" required autoComplete="username" className={campo} />
       </label>
-      <label className="block text-sm font-medium">
+      <label className="block text-sm font-medium text-wegg-900">
         Senha
-        <input type="password" required autoComplete="current-password" value={senha} onChange={(e) => setSenha(e.target.value)} className={campo} />
+        <input name="senha" type="password" required autoComplete="current-password" className={campo} />
       </label>
-      {erro && <p className="text-sm text-rose-700">{erro}</p>}
-      <button disabled={enviando} className="w-full rounded-md bg-slate-900 py-2 text-sm font-medium text-white disabled:opacity-60">
-        {enviando ? "Entrando…" : "Entrar"}
-      </button>
+      {estado.erro && <p className="text-sm text-rose-700">{estado.erro}</p>}
+      <Enviar />
     </form>
+  );
+}
+
+function Enviar() {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="w-full rounded-lg bg-wegg-900 py-2 text-sm font-medium text-off disabled:opacity-60">
+      {pending ? "Entrando…" : "Entrar"}
+    </button>
   );
 }

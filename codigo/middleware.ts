@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { OPCOES_COOKIE } from "@/lib/supabase-credenciais";
 
 /**
  * Renova a sessão a cada requisição e manda quem não está logado para
@@ -18,6 +19,7 @@ export async function middleware(request: NextRequest) {
   if (!url || !chave) return resposta;
 
   const supabase = createServerClient(url, chave, {
+    cookieOptions: OPCOES_COOKIE,
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -29,7 +31,11 @@ export async function middleware(request: NextRequest) {
         resposta = NextResponse.next({ request: { headers: atualizados } });
         aplicarHeadersSeguranca(resposta, nonce);
         for (const { name, value, options } of paraGravar) {
-          resposta.cookies.set(name, value, options);
+          resposta.cookies.set(name, value, {
+            ...options,
+            ...OPCOES_COOKIE,
+            maxAge: options.maxAge === 0 ? 0 : OPCOES_COOKIE.maxAge,
+          });
         }
       },
     },
@@ -69,7 +75,7 @@ function aplicarHeadersSeguranca(resposta: NextResponse, nonce: string) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const csp = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""};
     style-src 'self' 'unsafe-inline';
     img-src 'self' data:;
     font-src 'self';

@@ -44,7 +44,10 @@ importados como **inativo**.
 ## Pendências do projeto
 
 - [ ] Responder a revisão da planilha, item a item → [[Normalizacao]]
-- [ ] Criar projeto no Supabase, rodar migration + seed, criar usuário
-- [ ] Deploy na Vercel (Root Directory = `codigo`)
+- [x] Criar projeto no Supabase, rodar migration + seed, criar usuário
+- [x] Deploy na Vercel (Root Directory = `codigo`)
+- [ ] Rodar `0002_periodicos.sql` no Supabase
+- [ ] Definir se os contratos importados são Contrato (param no último
+      mês) ou Periódico (renovam)
 - [ ] Trocar as senhas que estavam escritas na aba "Despesas Waldemar"
       (não foram importadas, mas ficaram expostas na planilha)

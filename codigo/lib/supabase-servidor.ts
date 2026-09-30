@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { credenciais } from "./supabase-credenciais";
+import { OPCOES_COOKIE, credenciais } from "./supabase-credenciais";
 
 /**
  * Cliente para Server Components e Route Handlers. Lê a sessão dos cookies,
@@ -18,6 +18,7 @@ export function clienteServidor() {
   const { url, chave } = credenciais();
 
   return createServerClient(url, chave, {
+    cookieOptions: OPCOES_COOKIE,
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -25,7 +26,7 @@ export function clienteServidor() {
       setAll(paraGravar) {
         try {
           for (const { name, value, options } of paraGravar) {
-            cookieStore.set(name, value, options);
+            cookieStore.set(name, value, { ...options, ...OPCOES_COOKIE, maxAge: options.maxAge === 0 ? 0 : OPCOES_COOKIE.maxAge });
           }
         } catch {
           // Server Component não pode gravar cookie. O middleware já cuida
