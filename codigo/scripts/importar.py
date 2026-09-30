@@ -123,10 +123,13 @@ def main():
         if o["oculto"]:
             continue
         ref = f"{o['codigo'] or '—'} {o['fornecedor']} ({o['aba']}, linha {o['linha']})"
+        # Mesmo CT em várias linhas é normal (uma linha por conta/unidade,
+        # decisão de 30/09/2026). Só alerta se o nome também repetir.
         if o["codigo"]:
-            if o["codigo"] in vistos:
-                revisar.append(f"- [ ] **Duplicado** {ref} — mesmo código da linha {vistos[o['codigo']]}")
-            vistos.setdefault(o["codigo"], o["linha"])
+            chave = (o["codigo"], o["fornecedor"])
+            if chave in vistos:
+                revisar.append(f"- [ ] **Nome repetido** {ref} — igual à linha {vistos[chave]}; diferencie o nome")
+            vistos.setdefault(chave, o["linha"])
         if abertos_antigos:
             revisar.append(f"- [ ] **Sem cor antes do corte** {ref}: {', '.join(abertos_antigos)} "
                            "→ importado como lançado")

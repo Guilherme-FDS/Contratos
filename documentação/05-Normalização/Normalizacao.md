@@ -30,7 +30,7 @@ Painel no dia do import: 28 a medir, 2 aguardando título, 33 pendências. Resta
 
 Gerados em `codigo/scripts/saida/revisar.md` (fora do git). Tipos:
 
-- **Duplicado** — mesmo nº de CT em duas linhas ativas
+- **Duplicado** — mesmo nº de CT em duas linhas ativas → resolvido: é intencional (uma linha por conta)
 - **Sem cor antes do corte** — vencimento antigo sem cor em contrato
   ativo, importado como lançado; confirmar (27)
 - **Ativo sem vencimento futuro** — contrato visível sem nenhuma data
@@ -46,3 +46,4 @@ Registrar aqui cada resposta, pelo nº do contrato (sem valores):
 | 2026-09-30 | Todos da aba "Contratos Periódicos" (ativos) | A data é o **dia do vencimento mensal**. Import gera 12 vencimentos mensais a partir de hoje (1º em 01/10/2026); datas antigas ficam como lançadas. |
 | 2026-09-30 | Todos da aba "Contratos Periódicos" | **Removidos** da plataforma (migration 0002). A decisão anterior (vencimento mensal) foi revogada. |
 | 2026-09-30 | Todos os contratos importados da aba 2023 | Passam a **Periódico** (renovam sozinhos, migration 0003). Os pontuais o usuário troca para "Contrato" na mão. |
+| 2026-09-30 | CT/1132, CT/1886, CT/1359, CT/2704, CT/3370 | Nº repetido é **intencional**: um contrato com várias contas (unidades consumidoras, lotes, apartamentos, linhas Tim, Serasa consulta × negativação). Cada conta segue como um item separado, porque cada uma gera uma fatura/nota a lançar. |
