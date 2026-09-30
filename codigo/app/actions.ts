@@ -53,6 +53,33 @@ export async function mudarStatusVarios(
   return {};
 }
 
+/**
+ * Cria vencimentos já com uma etapa — usado nos meses que ficaram vazios na
+ * planilha (ex.: marcar "Não teve" num mês sem registro).
+ */
+export async function criarComStatus(
+  contratoId: string,
+  datas: string[],
+  status: StatusLancamento,
+  observacao?: string | null,
+): Promise<Resultado> {
+  if (!STATUS.includes(status)) return { erro: "Status inválido." };
+  if (datas.length === 0) return {};
+  if (datas.some((d) => !DATA.test(d))) return { erro: "Data inválida." };
+  const linhas = datas.map((vencimento) => ({
+    contrato_id: contratoId,
+    vencimento,
+    status,
+    observacao: observacao?.trim() || null,
+  }));
+  const { error } = await clienteServidor()
+    .from("lancamentos")
+    .upsert(linhas, { onConflict: "contrato_id,vencimento", ignoreDuplicates: true });
+  if (error) return { erro: error.message };
+  revalidarTudo();
+  return {};
+}
+
 export async function mudarSituacao(contratoId: string, situacao: Situacao): Promise<Resultado> {
   if (!SITUACOES.includes(situacao)) return { erro: "Situação inválida." };
   const { error } = await clienteServidor().from("contratos").update({ situacao }).eq("id", contratoId);

@@ -43,7 +43,10 @@ A caixa de filtro filtra os três murais por nº, nome ou data (`25/10`).
 
 No contrato, os vencimentos aparecem como grade **ano × mês**, na cor da
 etapa. Clique para selecionar, **Shift+clique** para um intervalo, ou
-*selecionar ano*. Na barra que aparece embaixo: *Medido*, *Título
+*selecionar ano*. **Quadrado tracejado** = mês sem registro (ficou em
+branco na planilha): clique nele para selecionar também — ao aplicar a
+etapa (ex.: *Não teve*), o vencimento é criado no dia habitual do
+contrato. Na barra que aparece embaixo: *Medido*, *Título
 lançado*, *Pendência*, *A medir* ou *Excluir*. Anos passados ficam
 recolhidos.
 

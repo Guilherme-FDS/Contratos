@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { criarLancamento, excluirLancamentos, gerarVencimentos, mudarStatusVarios } from "@/app/actions";
+import { criarComStatus, criarLancamento, excluirLancamentos, gerarVencimentos, mudarStatusVarios } from "@/app/actions";
 import { formatarData } from "@/lib/datas";
 import { STATUS_CELULA, STATUS_ROTULO } from "@/lib/tipos";
 import type { Lancamento, StatusLancamento } from "@/lib/tipos";
@@ -33,6 +33,8 @@ export default function GradeMeses({
   const router = useRouter();
   const [lista, setLista] = useState(iniciais);
   const [sel, setSel] = useState<Set<string>>(new Set());
+  /** Meses vazios selecionados ("AAAA-MM-DD" já com o dia padrão do contrato). */
+  const [vazios, setVazios] = useState<Set<string>>(new Set());
   const [erro, setErro] = useState<string | null>(null);
   const [data, setData] = useState("");
   const [qtd, setQtd] = useState(12);
@@ -43,6 +45,32 @@ export default function GradeMeses({
 
   const ordenada = useMemo(() => [...lista].sort((a, b) => a.vencimento.localeCompare(b.vencimento)), [lista]);
   const anoAtual = new Date().getFullYear();
+  // Dia de vencimento mais comum do contrato — usado nos meses vazios.
+  const diaPadrao = useMemo(() => {
+    const cont = new Map<number, number>();
+    for (const l of lista) {
+      const d = Number(l.vencimento.slice(8, 10));
+      cont.set(d, (cont.get(d) ?? 0) + 1);
+    }
+    return [...cont.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 10;
+  }, [lista]);
+
+  function dataVazia(ano: number, mes: number) {
+    const ultimo = new Date(Date.UTC(ano, mes + 1, 0)).getUTCDate();
+    return `${ano}-${String(mes + 1).padStart(2, "0")}-${String(Math.min(diaPadrao, ultimo)).padStart(2, "0")}`;
+  }
+
+  function alternarVazio(data: string) {
+    const novo = new Set(vazios);
+    if (novo.has(data)) novo.delete(data);
+    else novo.add(data);
+    setVazios(novo);
+  }
+
+  function limpar() {
+    setSel(new Set());
+    setVazios(new Set());
+  }
   const anos = useMemo(() => {
     const m = new Map<number, Lancamento[][]>();
     for (const l of ordenada) {
@@ -93,23 +121,39 @@ export default function GradeMeses({
 
   function aplicar(s: StatusLancamento) {
     const ids = [...sel];
+    const datas = [...vazios];
     let obs: string | null | undefined;
     if (s === "pendente") {
       const r = window.prompt("Motivo da pendência (opcional):", "");
       if (r === null) return;
       obs = r;
     }
+    const temporarios: Lancamento[] = datas.map((d) => ({
+      id: `novo-${d}`,
+      contrato_id: contratoId,
+      vencimento: d,
+      status: s,
+      observacao: obs ?? null,
+    }));
     rodar(
-      lista.map((l) => (sel.has(l.id) ? { ...l, status: s, observacao: obs === undefined ? l.observacao : obs } : l)),
-      () => mudarStatusVarios(ids, s, obs),
-      () => setSel(new Set()),
+      [
+        ...lista.map((l) => (sel.has(l.id) ? { ...l, status: s, observacao: obs === undefined ? l.observacao : obs } : l)),
+        ...temporarios,
+      ],
+      async () => {
+        const r1 = ids.length ? await mudarStatusVarios(ids, s, obs) : {};
+        if (r1.erro) return r1;
+        return datas.length ? criarComStatus(contratoId, datas, s, obs) : {};
+      },
+      limpar,
     );
   }
 
   function excluir() {
+    if (sel.size === 0) return limpar();
     if (!confirm(`Excluir ${sel.size} vencimento(s)?`)) return;
     const ids = [...sel];
-    rodar(lista.filter((l) => !sel.has(l.id)), () => excluirLancamentos(ids), () => setSel(new Set()));
+    rodar(lista.filter((l) => !sel.has(l.id)), () => excluirLancamentos(ids), limpar);
   }
 
   const selecionados = ordenada.filter((l) => sel.has(l.id));
@@ -156,7 +200,24 @@ export default function GradeMeses({
                   <div key={i} className="min-w-0">
                     <div className="mb-0.5 text-center text-[10px] uppercase tracking-wide text-wegg-400">{MESES[i]}</div>
                     <div className="flex flex-col gap-1">
-                      {ls.length === 0 && <div className="h-8 rounded-md border border-dashed border-wegg-100" />}
+                      {ls.length === 0 && (() => {
+                        const d = dataVazia(ano, i);
+                        const marcado = vazios.has(d);
+                        return (
+                          <button
+                            type="button"
+                            title={`${formatarData(d)} · sem registro — clique para marcar (ex.: Não teve)`}
+                            onClick={() => alternarVazio(d)}
+                            className={`h-8 rounded-md border border-dashed text-xs ${
+                              marcado
+                                ? "border-wegg-900 bg-wegg-50 text-wegg-900 outline outline-2 outline-offset-1 outline-wegg-900"
+                                : "border-wegg-100 text-transparent hover:border-wegg-300 hover:text-wegg-300"
+                            }`}
+                          >
+                            +
+                          </button>
+                        );
+                      })()}
                       {ls.map((l) => (
                         <button
                           key={l.id}
@@ -180,10 +241,11 @@ export default function GradeMeses({
         })}
       </div>
 
-      {sel.size > 0 && (
+      {sel.size + vazios.size > 0 && (
         <div className="sticky bottom-3 z-10 flex flex-wrap items-center gap-2 rounded-xl bg-wegg-900 px-3 py-2 text-off shadow-lg">
           <span className="text-sm">
-            {sel.size} selecionado(s)
+            {sel.size + vazios.size} selecionado(s)
+            {vazios.size > 0 && <span className="text-off/60"> · {vazios.size} mês(es) vazio(s) serão criados</span>}
             {selecionados.length > 0 && (
               <span className="text-off/60"> · {formatarData(selecionados[0].vencimento)} a {formatarData(selecionados[selecionados.length - 1].vencimento)}</span>
             )}
@@ -194,8 +256,8 @@ export default function GradeMeses({
             <Botao cor="amarelo" disabled={ocupado} onClick={() => aplicar("pendente")}>Pendência</Botao>
             <Botao disabled={ocupado} onClick={() => aplicar("sem_fatura")}>Não teve</Botao>
             <Botao disabled={ocupado} onClick={() => aplicar("aberto")}>A medir</Botao>
-            <Botao disabled={ocupado} onClick={excluir}>Excluir</Botao>
-            <button type="button" onClick={() => setSel(new Set())} className="px-2 text-xs text-off/70 hover:text-off">limpar</button>
+            {sel.size > 0 && <Botao disabled={ocupado} onClick={excluir}>Excluir</Botao>}
+            <button type="button" onClick={limpar} className="px-2 text-xs text-off/70 hover:text-off">limpar</button>
           </div>
         </div>
       )}
@@ -212,7 +274,7 @@ export function Legenda() {
           {STATUS_ROTULO[s]}
         </span>
       ))}
-      <span className="text-wegg-400">· Shift+clique seleciona um intervalo</span>
+      <span className="text-wegg-400">· Shift+clique seleciona um intervalo · quadrado tracejado = mês sem registro (clique para marcar)</span>
     </div>
   );
 }
