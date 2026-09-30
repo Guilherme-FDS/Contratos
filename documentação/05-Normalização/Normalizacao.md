@@ -11,7 +11,7 @@ Como a planilha virou banco, e o registro das decisões tomadas item a item.
 | Na planilha | Na plataforma |
 |---|---|
 | Aba "Contratos - nova planilha 2023" | contratos `normal` |
-| Aba "Contratos Periódicos" | contratos `periodico` |
+| Aba "Contratos Periódicos" | contratos `periodico`; a data é o dia do vencimento mensal → 12 vencimentos gerados a partir de hoje |
 | Aba "Despesas Waldemar" | contratos `waldemar` (sem nº de CT) |
 | Abas ocultas 2020, 2021, "Contratos" | **não importadas** (histórico) |
 | Linha oculta | situação `inativo` |
@@ -23,14 +23,14 @@ Como a planilha virou banco, e o registro das decisões tomadas item a item.
 | Texto nas células (notas) | observação do contrato |
 | Links, senhas, CPF, nº de conta | **descartados** |
 
-Resultado do import: 250 contratos (137 ativos), 5.938 vencimentos.
-Painel no dia do import: 28 a medir, 2 aguardando título, 33 pendências.
+Resultado do import: 250 contratos (137 ativos), 6.214 vencimentos.
+Painel no dia do import: 51 a medir, 2 aguardando título, 33 pendências. Restam 17 itens para revisar.
 
 ## Itens para revisar
 
 Gerados em `codigo/scripts/saida/revisar.md` (fora do git). Tipos:
 
-- **Duplicado** — mesmo nº de CT em duas linhas ativas (10)
+- **Duplicado** — mesmo nº de CT em duas linhas ativas
 - **Sem cor antes do corte** — vencimento antigo sem cor em contrato
   ativo, importado como lançado; confirmar (27)
 - **Ativo sem vencimento futuro** — contrato visível sem nenhuma data
@@ -43,3 +43,4 @@ Registrar aqui cada resposta, pelo nº do contrato (sem valores):
 
 | Data | Contrato | Decisão |
 |---|---|---|
+| 2026-09-30 | Todos da aba "Contratos Periódicos" (ativos) | A data é o **dia do vencimento mensal**. Import gera 12 vencimentos mensais a partir de hoje (1º em 01/10/2026); datas antigas ficam como lançadas. |

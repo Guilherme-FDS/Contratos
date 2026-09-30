@@ -63,6 +63,18 @@ def q(s):
     return "null" if s is None else "'" + str(s).replace("'", "''") + "'"
 
 
+def proximos_mensais(base, desde, n):
+    """`n` datas mensais no mesmo dia de `base`, a partir de `desde` (inclusive)."""
+    out, a, m = [], desde.year, desde.month
+    while len(out) < n:
+        ultimo = (datetime.date(a + m // 12, m % 12 + 1, 1) - datetime.timedelta(days=1)).day
+        d = datetime.date(a, m, min(base.day, ultimo))
+        if d >= desde and d > base:
+            out.append(d)
+        a, m = (a + 1, 1) if m == 12 else (a, m + 1)
+    return out
+
+
 def ler(caminho):
     wb = openpyxl.load_workbook(caminho)
     for aba, tipo in ABAS:
@@ -111,6 +123,15 @@ def main():
         cs.append(f"({q(o['id'])},{q(o['codigo'])},{q(o['fornecedor'])},"
                   f"{q(o['tipo'])},{q(situacao)},{q(obs)})")
 
+        # Periódicos: a data da planilha é o dia do vencimento mensal
+        # (decisão de 30/09/2026). Gera os próximos 12 a partir de hoje.
+        gerados = []
+        if o["tipo"] == "periodico" and not o["oculto"] and o["venc"]:
+            gerados = proximos_mensais(max(o["venc"]), hoje, 12)
+            for d in gerados:
+                ls.append(f"({q(o['id'])},'{d.isoformat()}','aberto')")
+            o["venc"] = {d: "lancado" for d in o["venc"]}
+
         abertos_antigos = []
         for d, s in sorted(o["venc"].items()):
             if s == "aberto" and d < corte:
@@ -129,7 +150,7 @@ def main():
         if abertos_antigos:
             revisar.append(f"- [ ] **Sem cor antes do corte** {ref}: {', '.join(abertos_antigos)} "
                            "→ importado como lançado")
-        if not any(d >= hoje for d in o["venc"]):
+        if not gerados and not any(d >= hoje for d in o["venc"]):
             revisar.append(f"- [ ] **Ativo sem vencimento futuro** {ref} → concluir, inativar ou "
                            "criar próximo vencimento")
 
