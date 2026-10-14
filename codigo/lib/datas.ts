@@ -18,3 +18,9 @@ export function textoPrazo(dias: number): string {
 export function normalizar(s: string): string {
   return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 }
+
+/** Busca estilo Explorer: cada palavra do termo precisa aparecer no texto, em qualquer ordem. */
+export function casaBusca(texto: string, termo: string): boolean {
+  const alvo = normalizar(texto);
+  return normalizar(termo).split(/\s+/).every((p) => alvo.includes(p));
+}

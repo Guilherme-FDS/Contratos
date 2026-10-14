@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { mudarSituacao } from "@/app/actions";
-import { formatarData, normalizar } from "@/lib/datas";
+import { casaBusca, formatarData, normalizar } from "@/lib/datas";
 import { SITUACAO_ROTULO, TIPO_ROTULO } from "@/lib/tipos";
 import type { ContratoResumo, Situacao, TipoContrato } from "@/lib/tipos";
 import { SeletorSituacao, SeloStatus, SeloTipo } from "./ui";
@@ -31,7 +31,7 @@ export default function TabelaContratos({ contratos: iniciais }: { contratos: Co
         (c) =>
           (!situacao || c.situacao === situacao) &&
           (!tipo || c.tipo === tipo) &&
-          (!n || normalizar(`${c.codigo ?? ""} ${c.fornecedor}`).includes(n)) &&
+          (!n || casaBusca(`${c.codigo ?? ""} ${c.fornecedor}`, n)) &&
           (!d || formatarData(c.proximo_vencimento).includes(d)),
       )
       .sort((a, b) => compararVencimento(a, b, crescente));

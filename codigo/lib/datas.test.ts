@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatarData, normalizar, textoPrazo } from "./datas";
+import { casaBusca, formatarData, normalizar, textoPrazo } from "./datas";
 
 describe("datas", () => {
   it("formata ISO em dd/mm/aaaa", () => {
@@ -15,5 +15,13 @@ describe("datas", () => {
 
   it("normaliza acento e caixa", () => {
     expect(normalizar("  Edméia ")).toBe("edmeia");
+  });
+
+  it("busca palavras em qualquer ordem", () => {
+    const t = "Claro Chapecó Waldemar";
+    expect(casaBusca(t, "claro waldemar")).toBe(true);
+    expect(casaBusca(t, "wal cha")).toBe(true);
+    expect(casaBusca(t, "  CHAPECO  ")).toBe(true);
+    expect(casaBusca(t, "claro vivo")).toBe(false);
   });
 });

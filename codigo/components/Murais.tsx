@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { mudarSituacao, mudarStatusVarios } from "@/app/actions";
-import { formatarData, normalizar, textoPrazo } from "@/lib/datas";
+import { casaBusca, formatarData, normalizar, textoPrazo } from "@/lib/datas";
 import type { ItemMural, Situacao, StatusLancamento } from "@/lib/tipos";
 import Obs from "./Obs";
 import { Botao, SeletorSituacao, SeloTipo } from "./ui";
@@ -99,7 +99,7 @@ export default function Murais({ itens: iniciais }: { itens: ItemMural[] }) {
   const grupos = useMemo(() => {
     const t = normalizar(busca);
     const f = t
-      ? itens.filter((i) => normalizar(`${i.codigo ?? ""} ${i.fornecedor} ${formatarData(i.vencimento)}`).includes(t))
+      ? itens.filter((i) => casaBusca(`${i.codigo ?? ""} ${i.fornecedor} ${formatarData(i.vencimento)}`, t))
       : itens;
     return agrupar(f);
   }, [itens, busca]);
